@@ -225,11 +225,28 @@ public:
   , mClearSVG(clearSVG)
   , mLeftSVG(leftSVG)
   , mRightSVG(rightSVG)
+  , mShowIndicator(false)
+  , mIndicatorColor(COLOR_TRANSPARENT)
   {
     mIgnoreMouse = true;
   }
 
-  void Draw(IGraphics& g) override { g.DrawFittedBitmap(mBitmap, mRECT); }
+  void Draw(IGraphics& g) override 
+  { 
+    g.DrawFittedBitmap(mBitmap, mRECT);
+    
+    // Draw indicator dot if enabled
+    if (mShowIndicator) {
+      const float dotSize = 6.0f;
+      const float dotX = mRECT.L + 5.0f;
+      const float dotY = mRECT.MH();
+      g.FillCircle(mIndicatorColor, dotX, dotY, dotSize);
+      g.DrawCircle(COLOR_BLACK.WithOpacity(0.5f), dotX, dotY, dotSize);
+    }
+  }
+
+  void SetShowIndicator(bool show) { mShowIndicator = show; SetDirty(true); }
+  void SetIndicatorColor(const IColor& color) { mIndicatorColor = color; SetDirty(true); }
 
   void OnPopupMenuSelection(IPopupMenu* pSelectedMenu, int valIdx) override
   {
@@ -405,6 +422,8 @@ private:
   IBitmap mBitmap;
   ISVG mLoadSVG, mClearSVG, mLeftSVG, mRightSVG;
   int mClearMsgTag;
+  bool mShowIndicator;
+  IColor mIndicatorColor;
 };
 
 class NAMMeterControl : public IVPeakAvgMeterControl<>, public IBitmapBase

@@ -745,6 +745,32 @@ void NeuralAmpModeler::OnParamChangeUI(int paramIdx, EParamSource source)
         pGraphics->ForControlInGroup("EQ_KNOBS", [active](IControl* pControl) { pControl->SetDisabled(!active); });
         break;
       case kIRToggle: pGraphics->GetControlWithTag(kCtrlTagIRFileBrowser)->SetDisabled(!active); break;
+      case kModelSelector: {
+        // Get the selected model index
+        int selectedIndex = GetParam(kModelSelector)->Value();
+        
+        // Remove any existing indicator dots
+        for (int i = 0; i < 5; i++) {
+          int browserTag = kCtrlTagModelFileBrowser + i;
+          if (auto* pControl = pGraphics->GetControlWithTag(browserTag)) {
+            if (auto* pBrowser = pControl->As<NAMFileBrowserControl>()) {
+              pBrowser->SetShowIndicator(false);
+            }
+          }
+        }
+        
+        // Add indicator dot to the selected browser
+        int selectedBrowserTag = kCtrlTagModelFileBrowser + selectedIndex;
+        if (auto* pControl = pGraphics->GetControlWithTag(selectedBrowserTag)) {
+          if (auto* pBrowser = pControl->As<NAMFileBrowserControl>()) {
+            pBrowser->SetShowIndicator(true);
+            pBrowser->SetIndicatorColor(IColor(255, 0, 255, 0)); // Green color
+          }
+        }
+        
+        pGraphics->SetAllControlsDirty();
+        break;
+      }
       default: break;
     }
   }
