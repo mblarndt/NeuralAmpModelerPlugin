@@ -45,6 +45,9 @@ enum EParams
   kCalibrateInput,
   kInputCalibrationLevel,
   kOutputMode,
+  // Model and IR selection switches
+  kModelSelector,
+  kIRSelector,
   kNumParams
 };
 
@@ -68,6 +71,8 @@ enum ECtrlTags
   kCtrlTagOutputMode,
   kCtrlTagCalibrateInput,
   kCtrlTagInputCalibrationLevel,
+  kCtrlTagModelSelector,
+  kCtrlTagIRSelector,
   kNumCtrlTags
 };
 

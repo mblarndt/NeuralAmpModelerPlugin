@@ -93,6 +93,8 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
   GetParam(kCalibrateInput)->InitBool(kCalibrateInputParamName.c_str(), kDefaultCalibrateInput);
   GetParam(kInputCalibrationLevel)
     ->InitDouble(kInputCalibrationLevelParamName.c_str(), kDefaultInputCalibrationLevel, -60.0, 60.0, 0.1, "dBu");
+  GetParam(kModelSelector)->InitEnum("ModelSelector", 0, {"A", "B", "C", "D", "E"});
+  GetParam(kIRSelector)->InitEnum("IRSelector", 0, {"A", "B", "C", "D", "E"});
 
   InitMIDICCMappings();
 
@@ -168,6 +170,30 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
     const auto fileHeight = 30.0f;
     const auto modelSpacing = 35.0f;
     const auto columnSpacing = 250.0f;  // Space between NAM and IR columns
+    
+    // Add 5-way switches above the columns
+    const auto switchHeight = 30.0f;
+    const auto switchWidth = 200.0f;
+    const auto switchSpacing = 40.0f;
+    
+    // Model selector switch
+    const auto modelSwitchArea = contentArea.GetFromTop(switchHeight)
+      .GetFromLeft(switchWidth)
+      .GetHShifted(60.0f)
+      .GetVShifted(300.0f);
+    
+    // IR selector switch
+    const auto irSwitchArea = contentArea.GetFromTop(switchHeight)
+      .GetFromLeft(switchWidth)
+      .GetHShifted(60.0f + columnSpacing)
+      .GetVShifted(300.0f);
+    
+    // Create 5-way switches
+    std::vector<const char*> modelOptions = {"A", "B", "C", "D", "E"};
+    std::vector<const char*> irOptions = {"A", "B", "C", "D", "E"};
+    
+    auto modelSwitch = new IVTabSwitchControl(modelSwitchArea, kModelSelector, modelOptions, "", style);
+    auto irSwitch = new IVTabSwitchControl(irSwitchArea, kIRSelector, irOptions, "", style);
     
     // First column - NAM selectors
     const auto modelArea = contentArea.GetFromTop(fileHeight).GetFromLeft(fileWidth).GetHShifted(60.0f).GetVShifted(330.0f);
@@ -321,16 +347,20 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
     pGraphics->AttachControl(new ISVGControl(ir4IconArea, GetParam(kIRToggle)->Value() ? irIconOnSVG : irIconOffSVG));
     pGraphics->AttachControl(new ISVGControl(ir5IconArea, GetParam(kIRToggle)->Value() ? irIconOnSVG : irIconOffSVG));
 
-    const std::string defaultNamFileString = "Select model...";
-    const std::string defaultNamFile2String = "Select second model...";
-    const std::string defaultNamFile3String = "Select third model...";
-    const std::string defaultNamFile4String = "Select fourth model...";
-    const std::string defaultNamFile5String = "Select fifth model...";
-    const std::string defaultIRString = "Select IR...";
-    const std::string defaultIR2String = "Select second IR...";
-    const std::string defaultIR3String = "Select third IR...";
-    const std::string defaultIR4String = "Select fourth IR...";
-    const std::string defaultIR5String = "Select fifth IR...";
+    // Attach 5-way switches
+    pGraphics->AttachControl(modelSwitch);
+    pGraphics->AttachControl(irSwitch);
+
+    const std::string defaultNamFileString = "Select model A...";
+    const std::string defaultNamFile2String = "Select model B...";
+    const std::string defaultNamFile3String = "Select model C...";
+    const std::string defaultNamFile4String = "Select model D...";
+    const std::string defaultNamFile5String = "Select model E...";
+    const std::string defaultIRString = "Select IR A...";
+    const std::string defaultIR2String = "Select IR B...";
+    const std::string defaultIR3String = "Select IR C...";
+    const std::string defaultIR4String = "Select IR D...";
+    const std::string defaultIR5String = "Select IR E...";
     pGraphics->AttachControl(new NAMFileBrowserControl(modelArea, kMsgTagClearModel, defaultNamFileString.c_str(),
                                                        "nam", loadModelCompletionHandler, style, fileSVG, crossSVG,
                                                        leftArrowSVG, rightArrowSVG, fileBackgroundBitmap),
@@ -409,6 +439,10 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
 
     // pGraphics->GetControlWithTag(kCtrlTagOutNorm)->SetMouseEventsWhenDisabled(false);
     // pGraphics->GetControlWithTag(kCtrlTagCalibrateInput)->SetMouseEventsWhenDisabled(false);
+
+    // Remove redundant radio button controls since we're using tab switches
+    // pGraphics->AttachControl(new IVRadioButtonControl(modelSwitchArea, kCtrlTagModelSelector, {"A", "B", "C", "D", "E"}, "", radioButtonStyle));
+    // pGraphics->AttachControl(new IVRadioButtonControl(irSwitchArea, kCtrlTagIRSelector, {"A", "B", "C", "D", "E"}, "", radioButtonStyle));
   };
 }
 
