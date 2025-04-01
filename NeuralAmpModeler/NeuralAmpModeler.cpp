@@ -679,11 +679,14 @@ void NeuralAmpModeler::OnUIOpen()
 
   if (mNAMPath.GetLength())
   {
-    SendControlMsgFromDelegate(kCtrlTagModelFileBrowser, kMsgTagLoadedModel, mNAMPath.GetLength(), mNAMPath.Get());
+    // Get the selected model index
+    int selectedIndex = GetParam(kModelSelector)->Value();
+    // Send the loaded model message to the correct file browser
+    SendControlMsgFromDelegate(kCtrlTagModelFileBrowser + selectedIndex, kMsgTagLoadedModel, mNAMPath.GetLength(), mNAMPath.Get());
     // If it's not loaded yet, then mark as failed.
     // If it's yet to be loaded, then the completion handler will set us straight once it runs.
     if (mModel == nullptr && mStagedModel == nullptr)
-      SendControlMsgFromDelegate(kCtrlTagModelFileBrowser, kMsgTagLoadFailed);
+      SendControlMsgFromDelegate(kCtrlTagModelFileBrowser + selectedIndex, kMsgTagLoadFailed);
   }
 
   if (mIRPath.GetLength())
@@ -749,22 +752,19 @@ void NeuralAmpModeler::OnParamChangeUI(int paramIdx, EParamSource source)
         // Get the selected model index
         int selectedIndex = GetParam(kModelSelector)->Value();
         
-        // Remove any existing indicator dots
+        // Set indicators for all browsers
         for (int i = 0; i < 5; i++) {
           int browserTag = kCtrlTagModelFileBrowser + i;
           if (auto* pControl = pGraphics->GetControlWithTag(browserTag)) {
             if (auto* pBrowser = pControl->As<NAMFileBrowserControl>()) {
-              pBrowser->SetShowIndicator(false);
+              pBrowser->SetShowIndicator(true);
+              // Set green for selected, red for others
+              if (i == selectedIndex) {
+                pBrowser->SetIndicatorColor(IColor(255, 0, 255, 0)); // Green
+              } else {
+                pBrowser->SetIndicatorColor(IColor(255, 255, 0, 0)); // Red
+              }
             }
-          }
-        }
-        
-        // Add indicator dot to the selected browser
-        int selectedBrowserTag = kCtrlTagModelFileBrowser + selectedIndex;
-        if (auto* pControl = pGraphics->GetControlWithTag(selectedBrowserTag)) {
-          if (auto* pBrowser = pControl->As<NAMFileBrowserControl>()) {
-            pBrowser->SetShowIndicator(true);
-            pBrowser->SetIndicatorColor(IColor(255, 0, 255, 0)); // Green color
           }
         }
         
@@ -972,7 +972,11 @@ std::string NeuralAmpModeler::_StageModel(const WDL_String& modelPath)
     temp->Reset(GetSampleRate(), GetBlockSize());
     mStagedModel = std::move(temp);
     mNAMPath = modelPath;
-    SendControlMsgFromDelegate(kCtrlTagModelFileBrowser, kMsgTagLoadedModel, mNAMPath.GetLength(), mNAMPath.Get());
+    
+    // Get the selected model index
+    int selectedIndex = GetParam(kModelSelector)->Value();
+    // Send the loaded model message to the correct file browser
+    SendControlMsgFromDelegate(kCtrlTagModelFileBrowser + selectedIndex, kMsgTagLoadedModel, mNAMPath.GetLength(), mNAMPath.Get());
   }
   catch (std::runtime_error& e)
   {
