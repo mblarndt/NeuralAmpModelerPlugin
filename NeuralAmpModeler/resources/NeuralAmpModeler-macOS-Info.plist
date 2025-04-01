@@ -7,11 +7,11 @@
 	<key>CFBundleExecutable</key>
 	<string>NeuralAmpModeler</string>
 	<key>CFBundleGetInfoString</key>
-	<string>NeuralAmpModeler v0.7.13 Copyright 2022 Steven Atkinson</string>
+	<string>NeuralAmpModeler v0.0.0 Copyright 2021-2022 Steven Atkinson</string>
 	<key>CFBundleIconFile</key>
 	<string>NeuralAmpModeler.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.StevenAtkinson.app.NeuralAmpModeler</string>
+	<string>com.Steven Atkinson.app.NeuralAmpModeler</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -19,11 +19,11 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.7.13</string>
+	<string>0.0.0</string>
 	<key>CFBundleSignature</key>
-	<string>1YEo</string>
+	<string>NAMp</string>
 	<key>CFBundleVersion</key>
-	<string>0.7.13</string>
+	<string>0.0.0</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>LSApplicationCategoryType</key>

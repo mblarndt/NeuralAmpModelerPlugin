@@ -53,7 +53,15 @@ const int numKnobs = 6;
 enum ECtrlTags
 {
   kCtrlTagModelFileBrowser = 0,
+  kCtrlTagModel2FileBrowser,
+  kCtrlTagModel3FileBrowser,
+  kCtrlTagModel4FileBrowser,
+  kCtrlTagModel5FileBrowser,
   kCtrlTagIRFileBrowser,
+  kCtrlTagIR2FileBrowser,
+  kCtrlTagIR3FileBrowser,
+  kCtrlTagIR4FileBrowser,
+  kCtrlTagIR5FileBrowser,
   kCtrlTagInputMeter,
   kCtrlTagOutputMeter,
   kCtrlTagSettingsBox,
@@ -67,12 +75,28 @@ enum EMsgTags
 {
   // These tags are used from UI -> DSP
   kMsgTagClearModel = 0,
+  kMsgTagClearModel2,
+  kMsgTagClearModel3,
+  kMsgTagClearModel4,
+  kMsgTagClearModel5,
   kMsgTagClearIR,
+  kMsgTagClearIR2,
+  kMsgTagClearIR3,
+  kMsgTagClearIR4,
+  kMsgTagClearIR5,
   kMsgTagHighlightColor,
   // The following tags are from DSP -> UI
   kMsgTagLoadFailed,
   kMsgTagLoadedModel,
+  kMsgTagLoadedModel2,
+  kMsgTagLoadedModel3,
+  kMsgTagLoadedModel4,
+  kMsgTagLoadedModel5,
   kMsgTagLoadedIR,
+  kMsgTagLoadedIR2,
+  kMsgTagLoadedIR3,
+  kMsgTagLoadedIR4,
+  kMsgTagLoadedIR5,
   kNumMsgTags
 };
 
@@ -191,6 +215,7 @@ public:
   void ProcessBlock(iplug::sample** inputs, iplug::sample** outputs, int nFrames) override;
   void OnReset() override;
   void OnIdle() override;
+  void ProcessMidiMsg(const iplug::IMidiMsg& msg) override;
 
   bool SerializeState(iplug::IByteChunk& chunk) const override;
   int UnserializeState(const iplug::IByteChunk& chunk, int startPos) override;
@@ -312,4 +337,19 @@ private:
   std::unordered_map<std::string, double> mNAMParams = {{"Input", 0.0}, {"Output", 0.0}};
 
   NAMSender mInputSender, mOutputSender;
+
+  // MIDI CC mappings for parameters
+  struct CCMapping {
+    int paramIdx;
+    int ccNum;
+    bool isMapped;
+  };
+  
+  static const int kNumCCParams = kNumParams;
+  CCMapping mCCMappings[kNumCCParams];
+  
+  void InitMIDICCMappings();
+  void ProcessMIDICC(const iplug::IMidiMsg& msg);
+  void MapParamToCC(int paramIdx, int ccNum);
+  void UnmapParamFromCC(int paramIdx);
 };

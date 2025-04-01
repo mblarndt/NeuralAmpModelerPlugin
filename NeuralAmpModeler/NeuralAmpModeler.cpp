@@ -94,6 +94,8 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
   GetParam(kInputCalibrationLevel)
     ->InitDouble(kInputCalibrationLevelParamName.c_str(), kDefaultInputCalibrationLevel, -60.0, 60.0, 0.1, "dBu");
 
+  InitMIDICCMappings();
+
   mNoiseGateTrigger.AddListener(&mNoiseGateGain);
 
   mMakeGraphicsFunc = [&]() {
@@ -164,12 +166,33 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
     // Areas for model and IR
     const auto fileWidth = 200.0f;
     const auto fileHeight = 30.0f;
-    const auto irYOffset = 38.0f;
-    const auto modelArea =
-      contentArea.GetFromBottom((2.0f * fileHeight)).GetFromTop(fileHeight).GetMidHPadded(fileWidth).GetVShifted(-1);
-    const auto modelIconArea = modelArea.GetFromLeft(30).GetTranslated(-40, 10);
-    const auto irArea = modelArea.GetVShifted(irYOffset);
-    const auto irSwitchArea = irArea.GetFromLeft(30.0f).GetHShifted(-40.0f).GetScaledAboutCentre(0.6f);
+    const auto modelSpacing = 35.0f;
+    const auto columnSpacing = 250.0f;  // Space between NAM and IR columns
+    
+    // First column - NAM selectors
+    const auto modelArea = contentArea.GetFromTop(fileHeight).GetFromLeft(fileWidth).GetHShifted(60.0f).GetVShifted(330.0f);
+    const auto model2Area = modelArea.GetVShifted(modelSpacing);
+    const auto model3Area = model2Area.GetVShifted(modelSpacing);
+    const auto model4Area = model3Area.GetVShifted(modelSpacing);
+    const auto model5Area = model4Area.GetVShifted(modelSpacing);
+    
+    // Second column - IR selectors
+    const auto irArea = contentArea.GetFromTop(fileHeight).GetFromLeft(fileWidth).GetHShifted(60.0f + columnSpacing).GetVShifted(330.0f);
+    const auto ir2Area = irArea.GetVShifted(modelSpacing);
+    const auto ir3Area = ir2Area.GetVShifted(modelSpacing);
+    const auto ir4Area = ir3Area.GetVShifted(modelSpacing);
+    const auto ir5Area = ir4Area.GetVShifted(modelSpacing);
+    
+    const auto modelIconArea = modelArea.GetFromLeft(30).GetTranslated(-35, 10);
+    const auto model2IconArea = model2Area.GetFromLeft(30).GetTranslated(-35, 10);
+    const auto model3IconArea = model3Area.GetFromLeft(30).GetTranslated(-35, 10);
+    const auto model4IconArea = model4Area.GetFromLeft(30).GetTranslated(-35, 10);
+    const auto model5IconArea = model5Area.GetFromLeft(30).GetTranslated(-35, 10);
+    const auto irIconArea = irArea.GetFromLeft(20).GetTranslated(-30, 5);
+    const auto ir2IconArea = ir2Area.GetFromLeft(20).GetTranslated(-30, 5);
+    const auto ir3IconArea = ir3Area.GetFromLeft(20).GetTranslated(-30, 5);
+    const auto ir4IconArea = ir4Area.GetFromLeft(20).GetTranslated(-30, 5);
+    const auto ir5IconArea = ir5Area.GetFromLeft(20).GetTranslated(-30, 5);
 
     // Areas for meters
     const auto inputMeterArea = contentArea.GetFromLeft(30).GetHShifted(-20).GetMidVPadded(100).GetVShifted(-25);
@@ -195,6 +218,42 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
       }
     };
 
+    // Second model loader button
+    auto loadModel2CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
+      if (fileName.GetLength())
+      {
+        // TODO: Implement second model loading logic
+        std::cout << "Loaded second model: " << fileName.Get() << std::endl;
+      }
+    };
+
+    // Third model loader button
+    auto loadModel3CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
+      if (fileName.GetLength())
+      {
+        // TODO: Implement third model loading logic
+        std::cout << "Loaded third model: " << fileName.Get() << std::endl;
+      }
+    };
+
+    // Fourth model loader button
+    auto loadModel4CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
+      if (fileName.GetLength())
+      {
+        // TODO: Implement fourth model loading logic
+        std::cout << "Loaded fourth model: " << fileName.Get() << std::endl;
+      }
+    };
+
+    // Fifth model loader button
+    auto loadModel5CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
+      if (fileName.GetLength())
+      {
+        // TODO: Implement fifth model loading logic
+        std::cout << "Loaded fifth model: " << fileName.Get() << std::endl;
+      }
+    };
+
     // IR loader button
     auto loadIRCompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
       if (fileName.GetLength())
@@ -212,27 +271,104 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
       }
     };
 
+    // Second IR loader button
+    auto loadIR2CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
+      if (fileName.GetLength())
+      {
+        // TODO: Implement second IR loading logic
+        std::cout << "Loaded second IR: " << fileName.Get() << std::endl;
+      }
+    };
+
+    // Third IR loader button
+    auto loadIR3CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
+      if (fileName.GetLength())
+      {
+        // TODO: Implement third IR loading logic
+        std::cout << "Loaded third IR: " << fileName.Get() << std::endl;
+      }
+    };
+
+    // Fourth IR loader button
+    auto loadIR4CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
+      if (fileName.GetLength())
+      {
+        // TODO: Implement fourth IR loading logic
+        std::cout << "Loaded fourth IR: " << fileName.Get() << std::endl;
+      }
+    };
+
+    // Fifth IR loader button
+    auto loadIR5CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
+      if (fileName.GetLength())
+      {
+        // TODO: Implement fifth IR loading logic
+        std::cout << "Loaded fifth IR: " << fileName.Get() << std::endl;
+      }
+    };
+
     pGraphics->AttachBackground(BACKGROUND_FN);
     pGraphics->AttachControl(new IBitmapControl(b, linesBitmap));
     pGraphics->AttachControl(new IVLabelControl(titleArea, "NEURAL AMP MODELER", titleStyle));
     pGraphics->AttachControl(new ISVGControl(modelIconArea, modelIconSVG));
+    pGraphics->AttachControl(new ISVGControl(model2IconArea, modelIconSVG));
+    pGraphics->AttachControl(new ISVGControl(model3IconArea, modelIconSVG));
+    pGraphics->AttachControl(new ISVGControl(model4IconArea, modelIconSVG));
+    pGraphics->AttachControl(new ISVGControl(model5IconArea, modelIconSVG));
+    pGraphics->AttachControl(new ISVGControl(irIconArea, GetParam(kIRToggle)->Value() ? irIconOnSVG : irIconOffSVG));
+    pGraphics->AttachControl(new ISVGControl(ir2IconArea, GetParam(kIRToggle)->Value() ? irIconOnSVG : irIconOffSVG));
+    pGraphics->AttachControl(new ISVGControl(ir3IconArea, GetParam(kIRToggle)->Value() ? irIconOnSVG : irIconOffSVG));
+    pGraphics->AttachControl(new ISVGControl(ir4IconArea, GetParam(kIRToggle)->Value() ? irIconOnSVG : irIconOffSVG));
+    pGraphics->AttachControl(new ISVGControl(ir5IconArea, GetParam(kIRToggle)->Value() ? irIconOnSVG : irIconOffSVG));
 
-#ifdef NAM_PICK_DIRECTORY
-    const std::string defaultNamFileString = "Select model directory...";
-    const std::string defaultIRString = "Select IR directory...";
-#else
     const std::string defaultNamFileString = "Select model...";
+    const std::string defaultNamFile2String = "Select second model...";
+    const std::string defaultNamFile3String = "Select third model...";
+    const std::string defaultNamFile4String = "Select fourth model...";
+    const std::string defaultNamFile5String = "Select fifth model...";
     const std::string defaultIRString = "Select IR...";
-#endif
+    const std::string defaultIR2String = "Select second IR...";
+    const std::string defaultIR3String = "Select third IR...";
+    const std::string defaultIR4String = "Select fourth IR...";
+    const std::string defaultIR5String = "Select fifth IR...";
     pGraphics->AttachControl(new NAMFileBrowserControl(modelArea, kMsgTagClearModel, defaultNamFileString.c_str(),
                                                        "nam", loadModelCompletionHandler, style, fileSVG, crossSVG,
                                                        leftArrowSVG, rightArrowSVG, fileBackgroundBitmap),
                              kCtrlTagModelFileBrowser);
-    pGraphics->AttachControl(new ISVGSwitchControl(irSwitchArea, {irIconOffSVG, irIconOnSVG}, kIRToggle));
-    pGraphics->AttachControl(
-      new NAMFileBrowserControl(irArea, kMsgTagClearIR, defaultIRString.c_str(), "wav", loadIRCompletionHandler, style,
+    
+    // Add second model browser control
+    pGraphics->AttachControl(new NAMFileBrowserControl(model2Area, kMsgTagClearModel2, defaultNamFile2String.c_str(),
+                                                       "nam", loadModel2CompletionHandler, style, fileSVG, crossSVG,
+                                                       leftArrowSVG, rightArrowSVG, fileBackgroundBitmap),
+                             kCtrlTagModel2FileBrowser);
+                             
+    pGraphics->AttachControl(new NAMFileBrowserControl(model3Area, kMsgTagClearModel3, defaultNamFile3String.c_str(),
+                                                       "nam", loadModel3CompletionHandler, style, fileSVG, crossSVG,
+                                                       leftArrowSVG, rightArrowSVG, fileBackgroundBitmap),
+                             kCtrlTagModel3FileBrowser);
+    pGraphics->AttachControl(new NAMFileBrowserControl(model4Area, kMsgTagClearModel4, defaultNamFile4String.c_str(),
+                                                       "nam", loadModel4CompletionHandler, style, fileSVG, crossSVG,
+                                                       leftArrowSVG, rightArrowSVG, fileBackgroundBitmap),
+                             kCtrlTagModel4FileBrowser);
+    pGraphics->AttachControl(new NAMFileBrowserControl(model5Area, kMsgTagClearModel5, defaultNamFile5String.c_str(),
+                                                       "nam", loadModel5CompletionHandler, style, fileSVG, crossSVG,
+                                                       leftArrowSVG, rightArrowSVG, fileBackgroundBitmap),
+                             kCtrlTagModel5FileBrowser);
+    pGraphics->AttachControl(new NAMFileBrowserControl(irArea, kMsgTagClearIR, defaultIRString.c_str(), "wav", loadIRCompletionHandler, style,
                                 fileSVG, crossSVG, leftArrowSVG, rightArrowSVG, fileBackgroundBitmap),
       kCtrlTagIRFileBrowser);
+    pGraphics->AttachControl(new NAMFileBrowserControl(ir2Area, kMsgTagClearIR2, defaultIR2String.c_str(), "wav", loadIR2CompletionHandler, style,
+                                fileSVG, crossSVG, leftArrowSVG, rightArrowSVG, fileBackgroundBitmap),
+      kCtrlTagIR2FileBrowser);
+    pGraphics->AttachControl(new NAMFileBrowserControl(ir3Area, kMsgTagClearIR3, defaultIR3String.c_str(), "wav", loadIR3CompletionHandler, style,
+                                fileSVG, crossSVG, leftArrowSVG, rightArrowSVG, fileBackgroundBitmap),
+      kCtrlTagIR3FileBrowser);
+    pGraphics->AttachControl(new NAMFileBrowserControl(ir4Area, kMsgTagClearIR4, defaultIR4String.c_str(), "wav", loadIR4CompletionHandler, style,
+                                fileSVG, crossSVG, leftArrowSVG, rightArrowSVG, fileBackgroundBitmap),
+      kCtrlTagIR4FileBrowser);
+    pGraphics->AttachControl(new NAMFileBrowserControl(ir5Area, kMsgTagClearIR5, defaultIR5String.c_str(), "wav", loadIR5CompletionHandler, style,
+                                fileSVG, crossSVG, leftArrowSVG, rightArrowSVG, fileBackgroundBitmap),
+      kCtrlTagIR5FileBrowser);
     pGraphics->AttachControl(
       new NAMSwitchControl(ngToggleArea, kNoiseGateActive, "Noise Gate", style, switchHandleBitmap));
     pGraphics->AttachControl(new NAMSwitchControl(eqToggleArea, kEQActive, "EQ", style, switchHandleBitmap));
@@ -404,6 +540,14 @@ void NeuralAmpModeler::OnIdle()
 
 bool NeuralAmpModeler::SerializeState(IByteChunk& chunk) const
 {
+  bool ok = SerializeParams(chunk);
+
+  // Serialize MIDI CC mappings
+  for (int i = 0; i < kNumCCParams; i++) {
+    ok &= chunk.Put(&mCCMappings[i].ccNum);
+    ok &= chunk.Put(&mCCMappings[i].isMapped);
+  }
+
   // If this isn't here when unserializing, then we know we're dealing with something before v0.8.0.
   WDL_String header("###NeuralAmpModeler###"); // Don't change this!
   chunk.PutStr(header.Get());
@@ -414,14 +558,22 @@ bool NeuralAmpModeler::SerializeState(IByteChunk& chunk) const
   // when we unserialize)
   chunk.PutStr(mNAMPath.Get());
   chunk.PutStr(mIRPath.Get());
-  return SerializeParams(chunk);
+  return ok;
 }
 
 int NeuralAmpModeler::UnserializeState(const IByteChunk& chunk, int startPos)
 {
+  int pos = UnserializeParams(chunk, startPos);
+
+  // Unserialize MIDI CC mappings
+  for (int i = 0; i < kNumCCParams; i++) {
+    pos = chunk.Get(&mCCMappings[i].ccNum, pos);
+    pos = chunk.Get(&mCCMappings[i].isMapped, pos);
+    mCCMappings[i].paramIdx = i;  // Always restore the parameter index
+  }
+
   // Look for the expected header. If it's there, then we'll know what to do.
   WDL_String header;
-  int pos = startPos;
   pos = chunk.GetStr(header, pos);
 
   const char* kExpectedHeader = "###NeuralAmpModeler###";
@@ -906,6 +1058,68 @@ void NeuralAmpModeler::_UpdateMeters(sample** inputPointer, sample** outputPoint
   const int nChansHack = 1;
   mInputSender.ProcessBlock(inputPointer, (int)nFrames, kCtrlTagInputMeter, nChansHack);
   mOutputSender.ProcessBlock(outputPointer, (int)nFrames, kCtrlTagOutputMeter, nChansHack);
+}
+
+void NeuralAmpModeler::InitMIDICCMappings()
+{
+  // Initialize all mappings as unmapped
+  for (int i = 0; i < kNumCCParams; i++) {
+    mCCMappings[i] = {i, -1, false};
+  }
+
+  // Set default MIDI CC mappings for the main parameters
+  MapParamToCC(kInputLevel, 22);  // CC 1 for Input Level
+  MapParamToCC(kToneBass, 23);    // CC 2 for Bass
+  MapParamToCC(kToneMid, 24);     // CC 3 for Mid
+  MapParamToCC(kToneTreble, 25);  // CC 4 for Treble
+  MapParamToCC(kOutputLevel, 26); // CC 5 for Output Level
+  MapParamToCC(kNoiseGateThreshold, 27); // CC 6 for Noise Gate Threshold
+}
+
+void NeuralAmpModeler::ProcessMidiMsg(const IMidiMsg& msg)
+{
+  if (msg.StatusMsg() == IMidiMsg::kControlChange) {
+    ProcessMIDICC(msg);
+  }
+}
+
+void NeuralAmpModeler::ProcessMIDICC(const iplug::IMidiMsg& msg) {
+  const int ccNum = msg.ControlChangeIdx();
+  const double normalizedValue = msg.ControlChange((IMidiMsg::EControlChangeMsg)ccNum) / 127.0;
+
+  // Find the parameter mapped to this CC
+  for (int i = 0; i < kNumCCParams; i++) {
+    if (mCCMappings[i].isMapped && mCCMappings[i].ccNum == ccNum) {
+      SetParameterValue(mCCMappings[i].paramIdx, normalizedValue);
+      break;
+    }
+  }
+}
+
+void NeuralAmpModeler::MapParamToCC(int paramIdx, int ccNum)
+{
+  if (paramIdx >= 0 && paramIdx < kNumCCParams) {
+    // First, unmap any existing parameter using this CC
+    for (int i = 0; i < kNumCCParams; i++) {
+      if (mCCMappings[i].isMapped && mCCMappings[i].ccNum == ccNum) {
+        mCCMappings[i].isMapped = false;
+        mCCMappings[i].ccNum = -1;
+      }
+    }
+    
+    // Map the new parameter
+    mCCMappings[paramIdx].paramIdx = paramIdx;
+    mCCMappings[paramIdx].ccNum = ccNum;
+    mCCMappings[paramIdx].isMapped = true;
+  }
+}
+
+void NeuralAmpModeler::UnmapParamFromCC(int paramIdx)
+{
+  if (paramIdx >= 0 && paramIdx < kNumCCParams) {
+    mCCMappings[paramIdx].isMapped = false;
+    mCCMappings[paramIdx].ccNum = -1;
+  }
 }
 
 // HACK
