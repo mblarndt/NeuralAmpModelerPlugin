@@ -231,16 +231,20 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
     auto loadModelCompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
       if (fileName.GetLength())
       {
-        // Sets mNAMPath and mStagedNAM
-        const std::string msg = _StageModel(fileName);
-        // TODO error messages like the IR loader.
-        if (msg.size())
-        {
-          std::stringstream ss;
-          ss << "Failed to load NAM model. Message:\n\n" << msg;
-          _ShowMessageBox(GetUI(), ss.str().c_str(), "Failed to load model!", kMB_OK);
+        // Store path in slot A
+        mNAMPaths[0] = fileName;
+        // Only load if this is the active slot
+        if (GetParam(kModelSelector)->Value() == 0) {
+          mNAMPath = fileName;
+          const std::string msg = _StageModel(fileName);
+          if (msg.size())
+          {
+            std::stringstream ss;
+            ss << "Failed to load NAM model. Message:\n\n" << msg;
+            _ShowMessageBox(GetUI(), ss.str().c_str(), "Failed to load model!", kMB_OK);
+          }
         }
-        std::cout << "Loaded: " << fileName.Get() << std::endl;
+        std::cout << "Stored model A: " << fileName.Get() << std::endl;
       }
     };
 
@@ -248,8 +252,20 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
     auto loadModel2CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
       if (fileName.GetLength())
       {
-        // TODO: Implement second model loading logic
-        std::cout << "Loaded second model: " << fileName.Get() << std::endl;
+        // Store path in slot B
+        mNAMPaths[1] = fileName;
+        // Only load if this is the active slot
+        if (GetParam(kModelSelector)->Value() == 1) {
+          mNAMPath = fileName;
+          const std::string msg = _StageModel(fileName);
+          if (msg.size())
+          {
+            std::stringstream ss;
+            ss << "Failed to load NAM model. Message:\n\n" << msg;
+            _ShowMessageBox(GetUI(), ss.str().c_str(), "Failed to load model!", kMB_OK);
+          }
+        }
+        std::cout << "Stored model B: " << fileName.Get() << std::endl;
       }
     };
 
@@ -257,8 +273,20 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
     auto loadModel3CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
       if (fileName.GetLength())
       {
-        // TODO: Implement third model loading logic
-        std::cout << "Loaded third model: " << fileName.Get() << std::endl;
+        // Store path in slot C
+        mNAMPaths[2] = fileName;
+        // Only load if this is the active slot
+        if (GetParam(kModelSelector)->Value() == 2) {
+          mNAMPath = fileName;
+          const std::string msg = _StageModel(fileName);
+          if (msg.size())
+          {
+            std::stringstream ss;
+            ss << "Failed to load NAM model. Message:\n\n" << msg;
+            _ShowMessageBox(GetUI(), ss.str().c_str(), "Failed to load model!", kMB_OK);
+          }
+        }
+        std::cout << "Stored model C: " << fileName.Get() << std::endl;
       }
     };
 
@@ -266,8 +294,20 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
     auto loadModel4CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
       if (fileName.GetLength())
       {
-        // TODO: Implement fourth model loading logic
-        std::cout << "Loaded fourth model: " << fileName.Get() << std::endl;
+        // Store path in slot D
+        mNAMPaths[3] = fileName;
+        // Only load if this is the active slot
+        if (GetParam(kModelSelector)->Value() == 3) {
+          mNAMPath = fileName;
+          const std::string msg = _StageModel(fileName);
+          if (msg.size())
+          {
+            std::stringstream ss;
+            ss << "Failed to load NAM model. Message:\n\n" << msg;
+            _ShowMessageBox(GetUI(), ss.str().c_str(), "Failed to load model!", kMB_OK);
+          }
+        }
+        std::cout << "Stored model D: " << fileName.Get() << std::endl;
       }
     };
 
@@ -275,8 +315,20 @@ NeuralAmpModeler::NeuralAmpModeler(const InstanceInfo& info)
     auto loadModel5CompletionHandler = [&](const WDL_String& fileName, const WDL_String& path) {
       if (fileName.GetLength())
       {
-        // TODO: Implement fifth model loading logic
-        std::cout << "Loaded fifth model: " << fileName.Get() << std::endl;
+        // Store path in slot E
+        mNAMPaths[4] = fileName;
+        // Only load if this is the active slot
+        if (GetParam(kModelSelector)->Value() == 4) {
+          mNAMPath = fileName;
+          const std::string msg = _StageModel(fileName);
+          if (msg.size())
+          {
+            std::stringstream ss;
+            ss << "Failed to load NAM model. Message:\n\n" << msg;
+            _ShowMessageBox(GetUI(), ss.str().c_str(), "Failed to load model!", kMB_OK);
+          }
+        }
+        std::cout << "Stored model E: " << fileName.Get() << std::endl;
       }
     };
 
@@ -662,6 +714,20 @@ void NeuralAmpModeler::OnParamChange(int paramIdx)
     case kToneBass: mToneStack->SetParam("bass", GetParam(paramIdx)->Value()); break;
     case kToneMid: mToneStack->SetParam("middle", GetParam(paramIdx)->Value()); break;
     case kToneTreble: mToneStack->SetParam("treble", GetParam(paramIdx)->Value()); break;
+    // Model selector:
+    case kModelSelector: {
+      int selectedIndex = GetParam(kModelSelector)->Value();
+      if (selectedIndex >= 0 && selectedIndex < 5 && mNAMPaths[selectedIndex].GetLength() > 0) {
+        mNAMPath = mNAMPaths[selectedIndex];
+        const std::string msg = _StageModel(mNAMPath);
+        if (msg.size()) {
+          std::stringstream ss;
+          ss << "Failed to load NAM model. Message:\n\n" << msg;
+          _ShowMessageBox(GetUI(), ss.str().c_str(), "Failed to load model!", kMB_OK);
+        }
+      }
+      break;
+    }
     default: break;
   }
 }

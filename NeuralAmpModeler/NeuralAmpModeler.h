@@ -333,7 +333,8 @@ private:
   //  recursive_linear_filter::LowPass mLowPass;
 
   // Path to model's config.json or model.nam
-  WDL_String mNAMPath;
+  WDL_String mNAMPath;  // Active model path
+  WDL_String mNAMPaths[5];  // Paths for each model slot
   // Path to IR (.wav file)
   WDL_String mIRPath;
 
