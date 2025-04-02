@@ -1221,12 +1221,14 @@ void NeuralAmpModeler::InitMIDICCMappings()
   }
 
   // Set default MIDI CC mappings for the main parameters
-  MapParamToCC(kInputLevel, 22);  // CC 1 for Input Level
-  MapParamToCC(kToneBass, 23);    // CC 2 for Bass
-  MapParamToCC(kToneMid, 24);     // CC 3 for Mid
-  MapParamToCC(kToneTreble, 25);  // CC 4 for Treble
-  MapParamToCC(kOutputLevel, 26); // CC 5 for Output Level
-  MapParamToCC(kNoiseGateThreshold, 27); // CC 6 for Noise Gate Threshold
+  MapParamToCC(kInputLevel, 22);  // CC 22 for Input Level
+  MapParamToCC(kToneBass, 23);    // CC 23 for Bass
+  MapParamToCC(kToneMid, 24);     // CC 24 for Mid
+  MapParamToCC(kToneTreble, 25);  // CC 25 for Treble
+  MapParamToCC(kOutputLevel, 26); // CC 26 for Output Level
+  MapParamToCC(kNoiseGateThreshold, 27); // CC 27 for Noise Gate Threshold
+  MapParamToCC(kModelSelector, 28); // CC 28 for Model Selector
+  MapParamToCC(kIRSelector, 29);    // CC 29 for IR Selector
 }
 
 void NeuralAmpModeler::ProcessMidiMsg(const IMidiMsg& msg)
@@ -1243,7 +1245,14 @@ void NeuralAmpModeler::ProcessMIDICC(const iplug::IMidiMsg& msg) {
   // Find the parameter mapped to this CC
   for (int i = 0; i < kNumCCParams; i++) {
     if (mCCMappings[i].isMapped && mCCMappings[i].ccNum == ccNum) {
-      SetParameterValue(mCCMappings[i].paramIdx, normalizedValue);
+      // Special handling for selectors
+      if (i == kModelSelector || i == kIRSelector) {
+        // Map MIDI CC value (0-127) to selector position (0-4)
+        int position = static_cast<int>(normalizedValue * 4.0);
+        SetParameterValue(i, position);
+      } else {
+        SetParameterValue(i, normalizedValue);
+      }
       break;
     }
   }
